@@ -163,3 +163,4 @@ app.*.map.json
 /android/app/profile
 /android/app/release
 >>>>>>> 26f9144 (First commit)
+bar-wiki/

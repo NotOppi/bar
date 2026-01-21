@@ -1,10 +1,18 @@
+/// Pantalla principal de la aplicación.
+library;
+
 import 'package:flutter/material.dart';
 import '../models/order.dart';
 import '../viewmodels/home_viewmodel.dart';
 import 'create_order_screen.dart';
 
-/// Pantalla principal (Home) que muestra la lista de pedidos del bar
+/// Pantalla Home que muestra la lista de pedidos activos del bar.
+///
+/// Es la pantalla principal de la aplicación. Muestra todos los pedidos
+/// actuales con su información resumida (mesa, productos y total).
+/// Permite crear nuevos pedidos mediante el botón flotante.
 class HomeScreen extends StatefulWidget {
+  /// Crea una instancia de [HomeScreen].
   const HomeScreen({super.key});
 
   @override
@@ -12,27 +20,40 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  // ViewModel para gestionar la lista de pedidos
+  /// ViewModel que gestiona la lista de pedidos.
   final HomeViewModel _viewModel = HomeViewModel();
 
-  /// Navega a la pantalla de creación de pedido
+  /// Navega a la pantalla de creación de pedido y espera el resultado.
+  ///
+  /// Utiliza navegación imperativa con [Navigator.push].
+  /// Si el usuario guarda un pedido, se añade a la lista.
+  /// Si cancela, no se realiza ningún cambio.
   Future<void> _navigateToCreateOrder() async {
-    // Navegación imperativa con push
+    // Navegación imperativa - espera el resultado del pedido
     final Order? newOrder = await Navigator.push<Order>(
       context,
       MaterialPageRoute(builder: (context) => const CreateOrderScreen()),
     );
 
-    // Verificar mounted antes de actualizar el estado
+    // IMPORTANTE: Verificar mounted antes de usar context o setState
+    // Esto evita errores si el widget fue desmontado durante la navegación
     if (!mounted) return;
 
-    // Si se devolvió un pedido, añadirlo a la lista
+    // Solo añadir si se devolvió un pedido válido
     if (newOrder != null) {
       setState(() {
         _viewModel.addOrder(newOrder);
       });
+
+      // Mostrar confirmación al usuario
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Pedido "${newOrder.tableName}" creado correctamente'),
+          backgroundColor: Colors.green,
+          duration: const Duration(seconds: 2),
+        ),
+      );
     }
-    // Si el usuario canceló (newOrder == null), no se hace nada
   }
 
   @override
@@ -57,19 +78,27 @@ class _HomeScreenState extends State<HomeScreen> {
                 return _OrderCard(order: order);
               },
             ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: _navigateToCreateOrder,
-        icon: const Icon(Icons.add),
-        label: const Text('Nuevo pedido'),
+      // Botón flotante con tooltip informativo
+      floatingActionButton: Tooltip(
+        message: 'Crear un nuevo pedido',
+        child: FloatingActionButton.extended(
+          onPressed: _navigateToCreateOrder,
+          icon: const Icon(Icons.add),
+          label: const Text('Nuevo pedido'),
+        ),
       ),
     );
   }
 }
 
-/// Widget que muestra la información de un pedido
+/// Widget que muestra la información resumida de un pedido en formato tarjeta.
+///
+/// Muestra: mesa/nombre, número de productos y precio total.
 class _OrderCard extends StatelessWidget {
+  /// El pedido a mostrar.
   final Order order;
 
+  /// Crea una tarjeta de pedido.
   const _OrderCard({required this.order});
 
   @override
@@ -82,10 +111,16 @@ class _OrderCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Mesa o nombre del pedido
+            // Fila con icono de mesa y nombre
             Row(
               children: [
-                const Icon(Icons.table_restaurant, color: Colors.brown),
+                Tooltip(
+                  message: 'Mesa o identificación del cliente',
+                  child: const Icon(
+                    Icons.table_restaurant,
+                    color: Colors.brown,
+                  ),
+                ),
                 const SizedBox(width: 8),
                 Expanded(
                   child: Text(
@@ -99,10 +134,17 @@ class _OrderCard extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 12),
-            // Número de productos
+            // Número total de productos
             Row(
               children: [
-                const Icon(Icons.shopping_basket, size: 20, color: Colors.grey),
+                Tooltip(
+                  message: 'Cantidad total de productos',
+                  child: const Icon(
+                    Icons.shopping_basket,
+                    size: 20,
+                    color: Colors.grey,
+                  ),
+                ),
                 const SizedBox(width: 8),
                 Text(
                   '${order.totalProducts} producto${order.totalProducts != 1 ? 's' : ''}',
@@ -111,10 +153,13 @@ class _OrderCard extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 8),
-            // Precio total
+            // Precio total del pedido
             Row(
               children: [
-                const Icon(Icons.euro, size: 20, color: Colors.green),
+                Tooltip(
+                  message: 'Importe total del pedido',
+                  child: const Icon(Icons.euro, size: 20, color: Colors.green),
+                ),
                 const SizedBox(width: 8),
                 Text(
                   'Total: ${order.totalPrice.toStringAsFixed(2)} €',

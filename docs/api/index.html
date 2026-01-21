@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, user-scalable=no">
+  <meta name="description" content="bar API docs, for the Dart programming language.">
+  <title>bar - Dart API docs</title>
+
+
+  
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
+  
+  <link rel="stylesheet" href="static-assets/github.css?v1">
+  <link rel="stylesheet" href="static-assets/styles.css?v1">
+  <link rel="icon" href="static-assets/favicon.png?v1">
+  
+</head>
+
+<body data-base-href="" data-using-base-href="false" class="light-theme">
+<div id="overlay-under-drawer"></div>
+<header id="title">
+  <span id="sidenav-left-toggle" class="material-symbols-outlined" role="button" tabindex="0">menu</span>
+  <ol class="breadcrumbs gt-separated dark hidden-xs">
+    <li class="self-crumb">bar package</li>
+  </ol>
+  <div class="self-name">bar</div>
+  <form class="search navbar-right" role="search">
+    <input type="text" id="search-box" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+  <button class="toggle" id="theme-button" title="Toggle between light and dark mode" aria-label="Light and dark mode toggle">
+    <span id="dark-theme-button" class="material-symbols-outlined" aria-hidden="true">
+      dark_mode
+    </span>
+    <span id="light-theme-button" class="material-symbols-outlined" aria-hidden="true">
+      light_mode
+    </span>
+  </button>
+</header>
+<main>
+  <div id="dartdoc-main-content" class="main-content">
+      
+<section class="desc markdown">
+  <h1 id="bar---gestin-de-pedidos">Bar - Gestión de Pedidos</h1>
+<h2 id="descripcin">Descripción</h2>
+<p>Aplicación móvil desarrollada en <strong>Flutter</strong> para la gestión de pedidos en un bar. Permite crear, visualizar y gestionar pedidos de forma intuitiva, con una interfaz moderna y fácil de usar.</p>
+<p>La aplicación sigue el patrón de arquitectura <strong>MVVM (Model-View-ViewModel)</strong> para una mejor organización del código, separación de responsabilidades y facilidad de mantenimiento.</p>
+<h2 id="tecnologas-utilizadas">Tecnologías Utilizadas</h2>
+<table>
+<thead>
+<tr>
+<th>Tecnología</th>
+<th>Versión</th>
+<th>Descripción</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Flutter</strong></td>
+<td>3.x</td>
+<td>Framework de desarrollo multiplataforma</td>
+</tr>
+<tr>
+<td><strong>Dart</strong></td>
+<td>3.x</td>
+<td>Lenguaje de programación</td>
+</tr>
+<tr>
+<td><strong>Material Design 3</strong></td>
+<td>-</td>
+<td>Sistema de diseño de UI</td>
+</tr>
+</tbody>
+</table>
+<h2 id="caractersticas-principales">Características Principales</h2>
+<h3 id="funcionalidades">Funcionalidades</h3>
+<ul>
+<li>
+<p><strong>Pantalla Principal (Home)</strong></p>
+<ul>
+<li>Visualización de todos los pedidos activos</li>
+<li>Información de cada pedido: mesa, número de productos y total</li>
+<li>Creación de nuevos pedidos</li>
+</ul>
+</li>
+<li>
+<p><strong>Creación de Pedidos</strong></p>
+<ul>
+<li>Asignación de mesa o nombre identificativo</li>
+<li>Selección múltiple de productos con cantidades</li>
+<li>Resumen provisional del pedido en tiempo real</li>
+<li>Validaciones de datos obligatorios</li>
+</ul>
+</li>
+<li>
+<p><strong>Carta del Bar</strong></p>
+<ul>
+<li>Catálogo de 8 productos disponibles</li>
+<li>Selección intuitiva con control de cantidad</li>
+<li>Visualización de precios y total acumulado</li>
+</ul>
+</li>
+<li>
+<p><strong>Resumen del Pedido</strong></p>
+<ul>
+<li>Vista detallada de solo lectura</li>
+<li>Desglose completo de productos y precios</li>
+<li>Total final del pedido</li>
+</ul>
+</li>
+</ul>
+<h3 id="arquitectura-mvvm">Arquitectura MVVM</h3>
+<pre class="language-dart"><code>lib/
+├── main.dart                 # Punto de entrada de la aplicación
+├── models/                   # Modelos de datos
+│   ├── order.dart           # Modelo de pedido
+│   └── product.dart         # Modelos de producto
+├── viewmodels/              # Lógica de negocio
+│   ├── home_viewmodel.dart
+│   ├── create_order_viewmodel.dart
+│   └── product_selection_viewmodel.dart
+└── views/                   # Interfaces de usuario
+    ├── home_screen.dart
+    ├── create_order_screen.dart
+    ├── product_selection_screen.dart
+    └── order_summary_screen.dart
+</code></pre>
+<h3 id="navegacin">Navegación</h3>
+<ul>
+<li><strong>Navegación imperativa</strong> (<code>Navigator.push</code>/<code>Navigator.pop</code>) entre pantallas principales</li>
+<li><strong>Navegación con rutas nombradas</strong> (<code>Navigator.pushNamed</code>) para el resumen del pedido</li>
+<li>Paso de datos entre pantallas con <code>arguments</code></li>
+<li>Manejo correcto de estados con verificación de <code>mounted</code></li>
+</ul>
+<h2 id="instalacin-y-ejecucin">Instalación y Ejecución</h2>
+<pre class="language-bash"><code class="language-bash"># Clonar el repositorio
+git clone https://github.com/NotOppi/bar.git
+
+# Navegar al directorio
+cd bar
+
+# Instalar dependencias
+flutter pub get
+
+# Ejecutar la aplicación
+flutter run
+</code></pre>
+<h2 id="documentacin">Documentación</h2>
+<ul>
+<li><a href="https://github.com/NotOppi/bar/wiki/manual-usuario">Manual de Usuario</a></li>
+<li><a href="https://github.com/NotOppi/bar/wiki/guia-de-despliegue">Guía de Despliegue</a></li>
+<li><a href="docs/api/index.html">Documentación API</a></li>
+</ul>
+<h2 id="autor">Autor</h2>
+<p><strong>Filippo Giuseppe Ferrantelli</strong></p>
+<h2 id="licencia">Licencia</h2>
+<p>Este proyecto está bajo la Licencia MIT.</p>
+</section>
+
+
+      <section class="summary">
+          <h2>Libraries</h2>
+        <dl>
+          <dt id="main">
+  <span class="name"><a href="main/">main</a></span> 
+
+</dt>
+<dd>Aplicación de gestión de pedidos para un bar.
+</dd>
+
+          <dt id="order">
+  <span class="name"><a href="models_order/">models/order</a></span> 
+
+</dt>
+<dd>Modelo de datos para representar un pedido del bar.
+</dd>
+
+          <dt id="product">
+  <span class="name"><a href="models_product/">models/product</a></span> 
+
+</dt>
+<dd>Modelos relacionados con los productos del bar.
+</dd>
+
+          <dt id="create_order_viewmodel">
+  <span class="name"><a href="viewmodels_create_order_viewmodel/">viewmodels/create_order_viewmodel</a></span> 
+
+</dt>
+<dd>ViewModel para la gestión de creación de pedidos.
+</dd>
+
+          <dt id="home_viewmodel">
+  <span class="name"><a href="viewmodels_home_viewmodel/">viewmodels/home_viewmodel</a></span> 
+
+</dt>
+<dd>ViewModel para la gestión de la pantalla principal.
+</dd>
+
+          <dt id="product_selection_viewmodel">
+  <span class="name"><a href="viewmodels_product_selection_viewmodel/">viewmodels/product_selection_viewmodel</a></span> 
+
+</dt>
+<dd>ViewModel para la gestión de selección de productos.
+</dd>
+
+          <dt id="create_order_screen">
+  <span class="name"><a href="views_create_order_screen/">views/create_order_screen</a></span> 
+
+</dt>
+<dd>Pantalla de creación de pedidos.
+</dd>
+
+          <dt id="home_screen">
+  <span class="name"><a href="views_home_screen/">views/home_screen</a></span> 
+
+</dt>
+<dd>Pantalla principal de la aplicación.
+</dd>
+
+          <dt id="order_summary_screen">
+  <span class="name"><a href="views_order_summary_screen/">views/order_summary_screen</a></span> 
+
+</dt>
+<dd>Pantalla de resumen final del pedido.
+</dd>
+
+          <dt id="product_selection_screen">
+  <span class="name"><a href="views_product_selection_screen/">views/product_selection_screen</a></span> 
+
+</dt>
+<dd>Pantalla de selección de productos de la carta.
+</dd>
+
+        </dl>
+      </section>
+  </div> <!-- /.main-content -->
+  <div id="dartdoc-sidebar-left" class="sidebar sidebar-offcanvas-left">
+    <!-- The search input and breadcrumbs below are only responsively visible at low resolutions. -->
+<header id="header-search-sidebar" class="hidden-l">
+  <form class="search-sidebar" role="search">
+    <input type="text" id="search-sidebar" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+</header>
+<ol class="breadcrumbs gt-separated dark hidden-l" id="sidebar-nav">
+    <li class="self-crumb">bar package</li>
+</ol>
+
+    <h5 class="hidden-xs"><span class="package-name">bar</span> <span class="package-kind">package</span></h5>
+    <ol>
+      <li class="section-title">Libraries</li>
+      <li><a href="main/">main</a></li>
+      <li><a href="models_order/">models/order</a></li>
+      <li><a href="models_product/">models/product</a></li>
+      <li><a href="viewmodels_create_order_viewmodel/">viewmodels/create_order_viewmodel</a></li>
+      <li><a href="viewmodels_home_viewmodel/">viewmodels/home_viewmodel</a></li>
+      <li><a href="viewmodels_product_selection_viewmodel/">viewmodels/product_selection_viewmodel</a></li>
+      <li><a href="views_create_order_screen/">views/create_order_screen</a></li>
+      <li><a href="views_home_screen/">views/home_screen</a></li>
+      <li><a href="views_order_summary_screen/">views/order_summary_screen</a></li>
+      <li><a href="views_product_selection_screen/">views/product_selection_screen</a></li>
+</ol>
+
+  </div>
+  <div id="dartdoc-sidebar-right" class="sidebar sidebar-offcanvas-right">
+  </div>
+</main>
+<footer>
+  <span class="no-break">
+    bar
+      0.1.0
+  </span>
+  
+</footer>
+
+
+<script src="static-assets/highlight.pack.js?v1"></script>
+<script src="static-assets/docs.dart.js"></script>
+
+</body>
+</html>
+

@@ -1,17 +1,29 @@
+/// Pantalla de resumen final del pedido.
+library;
+
 import 'package:flutter/material.dart';
 import '../models/product.dart';
 
-/// Pantalla de resumen final del pedido (solo lectura)
-/// Se accede mediante rutas con nombre (/resumen)
+/// Pantalla de resumen final del pedido (solo lectura).
+///
+/// Muestra toda la información del pedido antes de guardarlo:
+/// - Mesa o nombre del cliente
+/// - Lista de productos con cantidades y precios
+/// - Total del pedido
+///
+/// Se accede mediante navegación con rutas nombradas (`/resumen`).
+/// Esta pantalla no permite modificaciones, solo visualización.
 class OrderSummaryScreen extends StatelessWidget {
+  /// Crea una instancia de [OrderSummaryScreen].
   const OrderSummaryScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    // Obtener los argumentos pasados desde la navegación
+    // Obtener los argumentos pasados desde la navegación con pushNamed
     final args =
         ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
 
+    // Extraer datos del mapa de argumentos
     final String tableName = args['tableName'] as String;
     final List<SelectedProduct> products =
         args['products'] as List<SelectedProduct>;
@@ -21,9 +33,13 @@ class OrderSummaryScreen extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Resumen del Pedido'),
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () => Navigator.pop(context), // Volver con pop
+        // Botón de retroceso personalizado
+        leading: Tooltip(
+          message: 'Volver a la pantalla de creación',
+          child: IconButton(
+            icon: const Icon(Icons.arrow_back),
+            onPressed: () => Navigator.pop(context),
+          ),
         ),
       ),
       body: SingleChildScrollView(
@@ -31,14 +47,17 @@ class OrderSummaryScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            // Información de la mesa
+            // Tarjeta: Información de la mesa
             Card(
               color: Theme.of(context).colorScheme.primaryContainer,
               child: Padding(
                 padding: const EdgeInsets.all(16),
                 child: Row(
                   children: [
-                    const Icon(Icons.table_restaurant, size: 32),
+                    Tooltip(
+                      message: 'Identificación del pedido',
+                      child: const Icon(Icons.table_restaurant, size: 32),
+                    ),
                     const SizedBox(width: 12),
                     Expanded(
                       child: Column(
@@ -64,27 +83,43 @@ class OrderSummaryScreen extends StatelessWidget {
             ),
             const SizedBox(height: 16),
 
-            // Listado de productos
+            // Tarjeta: Listado de productos
             Card(
               child: Padding(
                 padding: const EdgeInsets.all(16),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Row(
+                    // Encabezado de la sección
+                    Row(
                       children: [
-                        Icon(Icons.receipt_long),
-                        SizedBox(width: 8),
-                        Text(
+                        Tooltip(
+                          message: 'Productos incluidos en el pedido',
+                          child: const Icon(Icons.receipt_long),
+                        ),
+                        const SizedBox(width: 8),
+                        const Text(
                           'Productos',
                           style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
+                        const Spacer(),
+                        // Badge con cantidad total
+                        Tooltip(
+                          message: 'Total de artículos',
+                          child: Chip(
+                            label: Text(
+                              '${products.fold(0, (sum, item) => sum + item.quantity)} uds.',
+                            ),
+                            backgroundColor: Colors.blue[100],
+                          ),
+                        ),
                       ],
                     ),
                     const Divider(),
+                    // Lista de productos
                     ListView.separated(
                       shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),
@@ -118,23 +153,29 @@ class OrderSummaryScreen extends StatelessWidget {
                               ),
                               // Precio unitario
                               Expanded(
-                                child: Text(
-                                  '${item.product.price.toStringAsFixed(2)} €',
-                                  textAlign: TextAlign.center,
-                                  style: const TextStyle(
-                                    fontSize: 14,
-                                    color: Colors.grey,
+                                child: Tooltip(
+                                  message: 'Precio unitario',
+                                  child: Text(
+                                    '${item.product.price.toStringAsFixed(2)} €',
+                                    textAlign: TextAlign.center,
+                                    style: const TextStyle(
+                                      fontSize: 14,
+                                      color: Colors.grey,
+                                    ),
                                   ),
                                 ),
                               ),
-                              // Precio total del producto
+                              // Subtotal del producto
                               Expanded(
-                                child: Text(
-                                  '${item.totalPrice.toStringAsFixed(2)} €',
-                                  textAlign: TextAlign.right,
-                                  style: const TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
+                                child: Tooltip(
+                                  message: 'Subtotal: ${item.product.price.toStringAsFixed(2)} € x ${item.quantity}',
+                                  child: Text(
+                                    '${item.totalPrice.toStringAsFixed(2)} €',
+                                    textAlign: TextAlign.right,
+                                    style: const TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                    ),
                                   ),
                                 ),
                               ),
@@ -149,7 +190,7 @@ class OrderSummaryScreen extends StatelessWidget {
             ),
             const SizedBox(height: 16),
 
-            // Total final
+            // Tarjeta: Total final
             Card(
               color: Colors.green[50],
               child: Padding(
@@ -157,11 +198,18 @@ class OrderSummaryScreen extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Row(
+                    Row(
                       children: [
-                        Icon(Icons.euro, size: 28, color: Colors.green),
-                        SizedBox(width: 8),
-                        Text(
+                        Tooltip(
+                          message: 'Importe total a pagar',
+                          child: const Icon(
+                            Icons.euro,
+                            size: 28,
+                            color: Colors.green,
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        const Text(
                           'TOTAL',
                           style: TextStyle(
                             fontSize: 22,
@@ -184,26 +232,36 @@ class OrderSummaryScreen extends StatelessWidget {
             ),
             const SizedBox(height: 24),
 
-            // Nota de solo lectura
+            // Nota informativa: Solo lectura
             const Center(
-              child: Text(
-                'Este es un resumen de solo lectura',
-                style: TextStyle(
-                  fontSize: 12,
-                  color: Colors.grey,
-                  fontStyle: FontStyle.italic,
-                ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.info_outline, size: 16, color: Colors.grey),
+                  SizedBox(width: 4),
+                  Text(
+                    'Este es un resumen de solo lectura',
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: Colors.grey,
+                      fontStyle: FontStyle.italic,
+                    ),
+                  ),
+                ],
               ),
             ),
             const SizedBox(height: 16),
 
             // Botón para volver
-            ElevatedButton.icon(
-              onPressed: () => Navigator.pop(context),
-              icon: const Icon(Icons.arrow_back),
-              label: const Text('Volver'),
-              style: ElevatedButton.styleFrom(
-                padding: const EdgeInsets.symmetric(vertical: 16),
+            Tooltip(
+              message: 'Volver a la pantalla anterior',
+              child: ElevatedButton.icon(
+                onPressed: () => Navigator.pop(context),
+                icon: const Icon(Icons.arrow_back),
+                label: const Text('Volver'),
+                style: ElevatedButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                ),
               ),
             ),
           ],
